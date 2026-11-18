@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>أرباع القرآن – التراويح</title>
+<meta name="theme-color" content="#1f4d3a">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1f4d3a;--gold:#b08d3c;--paper:#fbf7ec;--ink:#1b1a17;--bar:#173a2b;--soft:#efe6cf;--fs:30px}
+:root[data-theme=dark]{--paper:#14181a;--ink:#e9e4d4;--soft:#1f2629;--bar:#0e1213;--green:#2d7457}
+*{box-sizing:border-box}
+body{margin:0;background:var(--soft);color:var(--ink);font-family:Amiri,serif;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+header{position:sticky;top:0;z-index:5;background:var(--bar);color:#fff;padding:calc(8px + env(safe-area-inset-top,0px)) 10px 8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+header select,header button{font:inherit;font-size:16px;border:1px solid #ffffff55;background:#ffffff14;color:#fff;border-radius:8px;padding:6px 8px}
+header select option{color:#000}
+.title{font-weight:700;font-size:18px;flex:1;min-width:120px}
+main{max-width:640px;margin:12px auto;padding:0 10px}
+.page{background:var(--paper);border:2px solid var(--gold);outline:6px solid var(--paper);box-shadow:0 0 0 8px var(--green);border-radius:4px;margin:14px 8px;padding:18px 14px}
+#mushaf{font-family:'Amiri Quran',Amiri,serif;font-size:var(--fs);line-height:2.15;text-align:justify;text-align-last:center;text-justify:inter-word}
+.sura{margin:10px 0 4px;padding:6px;text-align:center;border:2px solid var(--gold);border-radius:6px;background:linear-gradient(var(--soft),var(--paper));font-size:.8em;color:var(--green);font-weight:700;text-align-last:center}
+.bism{text-align:center;font-size:.85em;margin:2px 0 6px;text-align-last:center}
+.pg{display:block;text-align:center;font-size:14px;color:var(--gold);margin:10px 0;border-top:1px dashed var(--gold);padding-top:4px;font-family:Amiri}
+.ay{border-radius:6px;transition:background .2s}
+.ay.on{background:#b08d3c40}
+.n{display:inline-block;color:var(--gold);font-size:.62em;margin:0 3px}
+#tafsir{margin:14px 8px;background:var(--paper);border:1px solid var(--gold);border-radius:8px;padding:8px 12px;font-size:20px;line-height:1.9}
+#tafsir summary{cursor:pointer;font-weight:700;color:var(--green)}
+#tafsir p{margin:8px 0;border-bottom:1px solid var(--soft)}#tafsir b{color:var(--gold)}
+footer{position:fixed;inset:auto 0 0 0;background:var(--bar);padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;justify-content:center;align-items:center;z-index:5}
+footer button,footer select{font:inherit;font-size:17px;color:#fff;background:#ffffff1a;border:1px solid #ffffff44;border-radius:10px;padding:9px 12px}
+footer select option{color:#000}
+footer .play{background:var(--gold);border-color:var(--gold);color:#1b1a17;font-weight:700;min-width:84px}
+#msg{text-align:center;padding:30px 10px;font-size:20px}
+button:focus-visible,select:focus-visible{outline:3px solid #ffd76a}
+</style>
+</head>
+<body>
+<header>
+  <div class="title" id="title">…</div>
+  <select id="juz" aria-label="الجزء"></select>
+  <select id="rub" aria-label="الربع"></select>
+  <button id="a-" aria-label="تصغير الخط">أ−</button>
+  <button id="a+" aria-label="تكبير الخط">أ+</button>
+  <button id="theme" aria-label="الوضع الليلي">◐</button>
+</header>
+<main>
+  <div class="page"><div id="mushaf"><div id="msg">جارٍ التحميل…</div></div></div>
+  <details id="tafsir"><summary>التفسير الميسر للربع</summary><div id="tbody"></div></details>
+</main>
+<footer>
+  <button id="next">التالي ›</button>
+  <button class="play" id="play">▶ استماع</button>
+  <select id="rec" aria-label="القارئ">
+    <option value="Alafasy_128kbps">العفاسي</option>
+    <option value="Husary_128kbps">الحصري</option>
+    <option value="Abdul_Basit_Murattal_192kbps">عبد الباسط</option>
+    <option value="Minshawy_Murattal_128kbps">المنشاوي</option>
+    <option value="Abdurrahmaan_As-Sudais_192kbps">السديس</option>
+    <option value="Saood_ash-Shuraym_128kbps">الشريم</option>
+    <option value="Hudhaify_128kbps">الحذيفي</option>
+    <option value="Maher_AlMuaqily_64kbps">ماهر المعيقلي</option>
+  </select>
+  <button id="prev">‹ السابق</button>
+</footer>
+<audio id="aud" preload="auto"></audio>
+<script>
+const $=id=>document.getElementById(id), API='https://api.alquran.cloud/v1/hizbQuarter/';
+const ar=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]), p3=n=>String(n).padStart(3,'0');
+const RUB_NAMES=['الربع الأول','الربع الثاني','الربع الثالث','الربع الرابع','الربع الخامس','الربع السادس','الربع السابع','الربع الثامن'];
+const S=JSON.parse(localStorage.getItem('rub3')||'{}');
+let rub=+new URLSearchParams(location.search).get('r')||S.rub||1, fs=S.fs||30, ayahs=[], cur=-1, playing=false;
+if(S.dark)document.documentElement.dataset.theme='dark';
+$('rec').value=S.rec||'Alafasy_128kbps';
+const save=()=>localStorage.setItem('rub3',JSON.stringify({rub,fs,rec:$('rec').value,dark:document.documentElement.dataset.theme==='dark'}));
+for(let j=1;j<=30;j++)$('juz').add(new Option('الجزء '+ar(j),j));
+for(let k=0;k<8;k++)$('rub').add(new Option(RUB_NAMES[k],k));
+function sync(){const j=Math.ceil(rub/8),k=(rub-1)%8;$('juz').value=j;$('rub').value=k;
+  $('title').textContent='الحزب '+ar(Math.ceil(rub/4))+' · ربع '+ar(rub)+' / ٢٤٠';}
+async function go(n){
+  rub=Math.min(240,Math.max(1,n));stopAudio();sync();save();scrollTo(0,0);
+  $('mushaf').innerHTML='<div id="msg">جارٍ التحميل…</div>';
+  try{
+    const r=await fetch(API+rub+'/editions/quran-uthmani,ar.muyassar');
+    const d=(await r.json()).data; ayahs=d[0].ayahs; render(ayahs,d[1].ayahs);
+  }catch(e){$('mushaf').innerHTML='<div id="msg">تعذّر التحميل. تأكد من الاتصال بالإنترنت ثم أعد المحاولة.</div>';}
+}
+function render(a,t){
+  let h='',lastPage=0,tf='';
+  a.forEach((x,i)=>{
+    if(x.page!==lastPage){h+=`<span class="pg">صفحة ${ar(x.page)}</span>`;lastPage=x.page;}
+    let txt=x.text;
+    if(x.numberInSurah===1){
+      h+=`<div class="sura">سُورَةُ ${x.surah.name.replace(/^سورة\s*/,'')}</div>`;
+      if(x.surah.number!==1&&x.surah.number!==9){h+='<div class="bism">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>';txt=txt.split(' ').slice(4).join(' ');}
+    }
+    h+=`<span class="ay" id="a${i}">${txt} <span class="n">﴿${ar(x.numberInSurah)}﴾</span></span> `;
+    tf+=`<p><b>${x.surah.name.replace(/^سورة\s*/,'')} ${ar(x.numberInSurah)}:</b> ${t[i].text}</p>`;
+  });
+  $('mushaf').innerHTML=h;$('tbody').innerHTML=tf;
+}
+function setFs(v){fs=Math.min(52,Math.max(20,v));document.documentElement.style.setProperty('--fs',fs+'px');save();}
+$('a+').onclick=()=>setFs(fs+3);$('a-').onclick=()=>setFs(fs-3);setFs(fs);
+$('theme').onclick=()=>{const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'':'dark';save();};
+$('juz').onchange=()=>go(($('juz').value-1)*8+1+ +$('rub').value);
+$('rub').onchange=$('juz').onchange;
+$('next').onclick=()=>go(rub+1);$('prev').onclick=()=>go(rub-1);
+$('rec').onchange=()=>{save();if(playing)playAt(Math.max(cur,0));};
+// audio
+const aud=$('aud');
+function mark(i){document.querySelectorAll('.ay.on').forEach(e=>e.classList.remove('on'));const e=$('a'+i);if(e){e.classList.add('on');e.scrollIntoView({block:'center',behavior:'smooth'});}}
+function playAt(i){if(i>=ayahs.length){if(rub<240){go(rub+1).then(()=>playAt(0));}return stopAudio();}
+  cur=i;playing=true;const x=ayahs[i];aud.src=`https://everyayah.com/data/${$('rec').value}/${p3(x.surah.number)}${p3(x.numberInSurah)}.mp3`;
+  aud.play().catch(()=>stopAudio());mark(i);$('play').textContent='⏸ إيقاف';}
+function stopAudio(){playing=false;aud.pause();$('play').textContent='▶ استماع';}
+aud.onended=()=>playAt(cur+1);
+$('play').onclick=()=>{if(playing){stopAudio();}else{playAt(Math.max(cur,0));}};
+// keep screen on
+async function wake(){try{await navigator.wakeLock.request('screen');}catch(e){}}
+wake();document.addEventListener('visibilitychange',()=>{if(!document.hidden)wake();});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+go(rub);
+</script>
+</body>
+</html>
