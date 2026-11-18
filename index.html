@@ -80,27 +80,47 @@ for(let j=1;j<=30;j++)$('juz').add(new Option('الجزء '+ar(j),j));
 for(let k=0;k<8;k++)$('rub').add(new Option(RUB_NAMES[k],k));
 function sync(){const j=Math.ceil(rub/8),k=(rub-1)%8;$('juz').value=j;$('rub').value=k;
   $('title').textContent='الحزب '+ar(Math.ceil(rub/4))+' · ربع '+ar(rub)+' / ٢٤٠';}
+async function getEd(n,ed){
+  const r=await fetch(API+n+'/'+ed);
+  if(!r.ok)throw new Error('HTTP '+r.status+' ('+ed+')');
+  const j=await r.json();
+  if(!j||!j.data||!j.data.ayahs)throw new Error('بيانات غير متوقعة ('+ed+')');
+  return j.data;
+}
 async function go(n){
   rub=Math.min(240,Math.max(1,n));stopAudio();sync();save();scrollTo(0,0);
-  $('mushaf').innerHTML='<div id="msg">جارٍ التحميل…</div>';
+  $('mushaf').innerHTML='<div id="msg">جارٍ التحميل…</div>';$('tbody').innerHTML='';
+  const my=rub;
   try{
-    const r=await fetch(API+rub+'/editions/quran-uthmani,ar.muyassar');
-    const d=(await r.json()).data; ayahs=d[0].ayahs; render(ayahs,d[1].ayahs);
-  }catch(e){$('mushaf').innerHTML='<div id="msg">تعذّر التحميل. تأكد من الاتصال بالإنترنت ثم أعد المحاولة.</div>';}
+    const q=await getEd(my,'quran-uthmani');
+    if(my!==rub)return;
+    let t=null;try{t=await getEd(my,'ar.muyassar');}catch(e){console.warn('tafsir',e);}
+    if(my!==rub)return;
+    ayahs=q.ayahs;render(q,t);
+  }catch(e){console.error(e);
+    $('mushaf').innerHTML='<div id="msg">تعذّر التحميل. تأكد من الاتصال بالإنترنت ثم أعد المحاولة.<br><small dir="ltr" style="font-size:13px;opacity:.7">'+(e&&e.message||e)+'</small><br><button onclick="go(rub)" style="font:inherit;margin-top:10px;padding:6px 16px">إعادة المحاولة</button></div>';}
 }
-function render(a,t){
-  let h='',lastPage=0,tf='';
+function render(q,tf){
+  const a=q.ayahs,t=tf?tf.ayahs:[];
+  const keys=Object.keys(q.surahs||{}).map(Number).sort((x,y)=>x-y);
+  let h='',lastPage=0,tx='',si=0;
   a.forEach((x,i)=>{
+    if(i>0&&x.numberInSurah===1)si++;
+    const sn=(x.surah&&x.surah.number)||keys[si]||1;
+    const sm=x.surah||(q.surahs&&q.surahs[sn])||{name:'سورة'};
+    x.sn=sn;
+    const nm=String(sm.name||'').replace(/^سورة\s*/,'');
     if(x.page!==lastPage){h+=`<span class="pg">صفحة ${ar(x.page)}</span>`;lastPage=x.page;}
     let txt=x.text;
     if(x.numberInSurah===1){
-      h+=`<div class="sura">سُورَةُ ${x.surah.name.replace(/^سورة\s*/,'')}</div>`;
-      if(x.surah.number!==1&&x.surah.number!==9){h+='<div class="bism">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>';txt=txt.split(' ').slice(4).join(' ');}
+      h+=`<div class="sura">سُورَةُ ${nm}</div>`;
+      if(sn!==1&&sn!==9){h+='<div class="bism">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>';txt=txt.split(' ').slice(4).join(' ');}
     }
     h+=`<span class="ay" id="a${i}">${txt} <span class="n">﴿${ar(x.numberInSurah)}﴾</span></span> `;
-    tf+=`<p><b>${x.surah.name.replace(/^سورة\s*/,'')} ${ar(x.numberInSurah)}:</b> ${t[i].text}</p>`;
+    if(t[i])tx+=`<p><b>${nm} ${ar(x.numberInSurah)}:</b> ${t[i].text}</p>`;
   });
-  $('mushaf').innerHTML=h;$('tbody').innerHTML=tf;
+  $('mushaf').innerHTML=h;
+  $('tbody').innerHTML=tx||'<p>تعذّر تحميل التفسير.</p>';
 }
 function setFs(v){fs=Math.min(52,Math.max(20,v));document.documentElement.style.setProperty('--fs',fs+'px');save();}
 $('a+').onclick=()=>setFs(fs+3);$('a-').onclick=()=>setFs(fs-3);setFs(fs);
@@ -113,7 +133,7 @@ $('rec').onchange=()=>{save();if(playing)playAt(Math.max(cur,0));};
 const aud=$('aud');
 function mark(i){document.querySelectorAll('.ay.on').forEach(e=>e.classList.remove('on'));const e=$('a'+i);if(e){e.classList.add('on');e.scrollIntoView({block:'center',behavior:'smooth'});}}
 function playAt(i){if(i>=ayahs.length){if(rub<240){go(rub+1).then(()=>playAt(0));}return stopAudio();}
-  cur=i;playing=true;const x=ayahs[i];aud.src=`https://everyayah.com/data/${$('rec').value}/${p3(x.surah.number)}${p3(x.numberInSurah)}.mp3`;
+  cur=i;playing=true;const x=ayahs[i];aud.src=`https://everyayah.com/data/${$('rec').value}/${p3(x.sn)}${p3(x.numberInSurah)}.mp3`;
   aud.play().catch(()=>stopAudio());mark(i);$('play').textContent='⏸ إيقاف';}
 function stopAudio(){playing=false;aud.pause();$('play').textContent='▶ استماع';}
 aud.onended=()=>playAt(cur+1);
