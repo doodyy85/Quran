@@ -3,83 +3,95 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>أرباع القرآن – التراويح</title>
+<title>مصحف التراويح</title>
 <meta name="theme-color" content="#1f4d3a">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--green:#1f4d3a;--gold:#c9a24a;--paper:#fbf6e6;--ink:#1b1a17;--bar:#173a2b;--soft:#e9e1cc}
-:root[data-theme=dark]{--paper:#15191b;--ink:#e9e4d4;--soft:#0c0f10;--bar:#0e1213;--green:#8fcfae}
+:root{--green:#1f4d3a;--gold:#c9a24a;--paper:#fbf6e6;--ink:#1b1a17;--bar:#173a2b;--soft:#e9e1cc;--bw:52px;--veil:.78}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:var(--soft);color:var(--ink);font-family:Amiri,serif;overflow:hidden}
-header{position:fixed;top:0;left:0;right:0;z-index:6;background:var(--bar);color:#fff;padding:calc(6px + env(safe-area-inset-top,0px)) 10px 6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;transition:transform .25s}
-footer{position:fixed;bottom:0;left:0;right:0;z-index:6;background:var(--bar);padding:7px 10px calc(7px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;justify-content:center;transition:transform .25s}
-body.hide header{transform:translateY(-110%)}body.hide footer{transform:translateY(110%)}
-header select,header button{font:inherit;font-size:15px;border:1px solid #ffffff55;background:#ffffff14;color:#fff;border-radius:8px;padding:4px 6px;max-width:34vw}
-header select option{color:#000}
-.title{font-weight:700;font-size:17px;flex:1 0 100%}
+button,select{font-family:inherit}
+header{position:fixed;top:0;left:0;right:0;z-index:6;background:linear-gradient(var(--bar),color-mix(in srgb,var(--bar) 88%,#000));color:#fff;padding:calc(6px + env(safe-area-inset-top,0px)) 12px 8px;border-radius:0 0 18px 18px;box-shadow:0 4px 16px #0005;transition:transform .28s}
+.top{display:flex;align-items:center;justify-content:space-between}
+.brand{font-weight:700;font-size:21px;color:var(--gold);letter-spacing:.3px}
+.brand b{margin-left:6px;font-size:24px}
+.tb{display:flex;gap:6px}
+.tb button{width:36px;height:36px;border-radius:50%;border:1px solid #ffffff44;background:#ffffff14;color:#fff;font-size:18px}
+.sel{display:flex;gap:6px;margin-top:6px}
+.sel select{flex:1;min-width:0;font-size:15px;border:1px solid #ffffff44;background:#ffffff14;color:#fff;border-radius:10px;padding:6px 4px}
+.sel select option{color:#000}
+.sub{font-size:14px;opacity:.85;margin-top:5px;text-align:center}
+footer{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom,0px));left:10px;right:10px;z-index:6;background:color-mix(in srgb,var(--bar) 92%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid #ffffff2a;border-radius:22px;padding:7px;display:flex;gap:6px;justify-content:space-between;box-shadow:0 6px 20px #0006;transition:transform .28s}
+footer button{flex:1;font-size:15px;color:#fff;background:none;border:0;border-radius:16px;padding:9px 4px;line-height:1.25}
+footer button i{display:block;font-style:normal;font-size:19px}
+footer .play{flex:1.5;background:var(--gold);color:#1b1a17;font-weight:700}
+body.hide header{transform:translateY(-120%)}body.hide footer{transform:translateY(160%)}
 #mushaf{height:100vh;height:100dvh;display:flex;direction:rtl;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 #mushaf::-webkit-scrollbar{display:none}
 .mp{flex:0 0 100%;height:100%;scroll-snap-align:center;scroll-snap-stop:always;display:flex;align-items:center;justify-content:center}
 .pg{display:flex;flex-direction:column;align-items:stretch}
-.mph{display:flex;justify-content:space-between;font-size:16px;color:var(--green);padding:0 8px 6px;font-weight:700}
+.mph{display:flex;justify-content:space-between;align-items:center;font-size:16px;color:var(--green);padding:0 8px 6px;font-weight:700}
 .mpn{text-align:center;font-size:18px;color:var(--green);padding-top:6px;line-height:1.3;font-weight:700}
 .rg{font-size:13px;font-weight:400;opacity:.85;display:block}
-.fr{position:relative;border:26px solid transparent;border-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20xmlns%3Axlink%3D%27http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%27%20width%3D%27120%27%20height%3D%27120%27%20viewBox%3D%270%200%20120%20120%27%3E%3Cdefs%3E%3Cg%20id%3D%27E%27%3E%3Crect%20width%3D%2740%27%20height%3D%2740%27%20fill%3D%27%23b3d9aa%27%2F%3E%3Cpath%20d%3D%27M0%208L20%2020L0%2032M40%208L20%2020L40%2032%27%20fill%3D%27none%27%20stroke%3D%27%23fff%27%20stroke-opacity%3D%27.55%27%20stroke-width%3D%27.9%27%2F%3E%3Cpath%20d%3D%27M0%2012Q10%206%2020%2012T40%2012M0%2028Q10%2034%2020%2028T40%2028%27%20fill%3D%27none%27%20stroke%3D%27%235aa55f%27%20stroke-width%3D%27.9%27%2F%3E%3Cellipse%20cx%3D%277%27%20cy%3D%2720%27%20rx%3D%276.2%27%20ry%3D%272.7%27%20transform%3D%27rotate%28-28%207%2020%29%27%20fill%3D%27%235aa55f%27%20stroke%3D%27%232c6a45%27%20stroke-width%3D%27.5%27%2F%3E%3Cellipse%20cx%3D%2733%27%20cy%3D%2720%27%20rx%3D%276.2%27%20ry%3D%272.7%27%20transform%3D%27rotate%2828%2033%2020%29%27%20fill%3D%27%235aa55f%27%20stroke%3D%27%232c6a45%27%20stroke-width%3D%27.5%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2713.8%27%20rx%3D%273.5%27%20ry%3D%276%27%20transform%3D%27rotate%280%2020%2020%29%27%20fill%3D%27%23ec9fc2%27%20stroke%3D%27%23c4558a%27%20stroke-width%3D%27.6%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2713.8%27%20rx%3D%273.5%27%20ry%3D%276%27%20transform%3D%27rotate%2872%2020%2020%29%27%20fill%3D%27%23ec9fc2%27%20stroke%3D%27%23c4558a%27%20stroke-width%3D%27.6%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2713.8%27%20rx%3D%273.5%27%20ry%3D%276%27%20transform%3D%27rotate%28144%2020%2020%29%27%20fill%3D%27%23ec9fc2%27%20stroke%3D%27%23c4558a%27%20stroke-width%3D%27.6%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2713.8%27%20rx%3D%273.5%27%20ry%3D%276%27%20transform%3D%27rotate%28216%2020%2020%29%27%20fill%3D%27%23ec9fc2%27%20stroke%3D%27%23c4558a%27%20stroke-width%3D%27.6%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2713.8%27%20rx%3D%273.5%27%20ry%3D%276%27%20transform%3D%27rotate%28288%2020%2020%29%27%20fill%3D%27%23ec9fc2%27%20stroke%3D%27%23c4558a%27%20stroke-width%3D%27.6%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%273%27%20fill%3D%27%23fbe9a6%27%20stroke%3D%27%23c9a24a%27%20stroke-width%3D%27.6%27%2F%3E%3Ccircle%20cx%3D%2713%27%20cy%3D%2711%27%20r%3D%271.1%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2727%27%20cy%3D%2711%27%20r%3D%271.1%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2713%27%20cy%3D%2729%27%20r%3D%271.1%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2727%27%20cy%3D%2729%27%20r%3D%271.1%27%20fill%3D%27%23fff%27%2F%3E%3Crect%20width%3D%2740%27%20height%3D%273%27%20fill%3D%27%232c6a45%27%2F%3E%3Crect%20y%3D%274.2%27%20width%3D%2740%27%20height%3D%27.9%27%20fill%3D%27%23fff%27%2F%3E%3Crect%20y%3D%2737%27%20width%3D%2740%27%20height%3D%273%27%20fill%3D%27%232c6a45%27%2F%3E%3Crect%20y%3D%2734.9%27%20width%3D%2740%27%20height%3D%27.9%27%20fill%3D%27%23fff%27%2F%3E%3C%2Fg%3E%3Cg%20id%3D%27C%27%3E%3Crect%20width%3D%2740%27%20height%3D%2740%27%20fill%3D%27%23b3d9aa%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2716%27%20fill%3D%27%237fbf86%27%20stroke%3D%27%232c6a45%27%20stroke-width%3D%27.9%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2713%27%20fill%3D%27none%27%20stroke%3D%27%23fff%27%20stroke-opacity%3D%27.7%27%20stroke-width%3D%27.8%27%20stroke-dasharray%3D%271.6%201.6%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2713%27%20rx%3D%273.3%27%20ry%3D%276.4%27%20transform%3D%27rotate%280%2020%2020%29%27%20fill%3D%27%23ec9fc2%27%20stroke%3D%27%23c4558a%27%20stroke-width%3D%27.6%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2713%27%20rx%3D%273.3%27%20ry%3D%276.4%27%20transform%3D%27rotate%2845%2020%2020%29%27%20fill%3D%27%23ec9fc2%27%20stroke%3D%27%23c4558a%27%20stroke-width%3D%27.6%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2713%27%20rx%3D%273.3%27%20ry%3D%276.4%27%20transform%3D%27rotate%2890%2020%2020%29%27%20fill%3D%27%23ec9fc2%27%20stroke%3D%27%23c4558a%27%20stroke-width%3D%27.6%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2713%27%20rx%3D%273.3%27%20ry%3D%276.4%27%20transform%3D%27rotate%28135%2020%2020%29%27%20fill%3D%27%23ec9fc2%27%20stroke%3D%27%23c4558a%27%20stroke-width%3D%27.6%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2713%27%20rx%3D%273.3%27%20ry%3D%276.4%27%20transform%3D%27rotate%28180%2020%2020%29%27%20fill%3D%27%23ec9fc2%27%20stroke%3D%27%23c4558a%27%20stroke-width%3D%27.6%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2713%27%20rx%3D%273.3%27%20ry%3D%276.4%27%20transform%3D%27rotate%28225%2020%2020%29%27%20fill%3D%27%23ec9fc2%27%20stroke%3D%27%23c4558a%27%20stroke-width%3D%27.6%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2713%27%20rx%3D%273.3%27%20ry%3D%276.4%27%20transform%3D%27rotate%28270%2020%2020%29%27%20fill%3D%27%23ec9fc2%27%20stroke%3D%27%23c4558a%27%20stroke-width%3D%27.6%27%2F%3E%3Cellipse%20cx%3D%2720%27%20cy%3D%2713%27%20rx%3D%273.3%27%20ry%3D%276.4%27%20transform%3D%27rotate%28315%2020%2020%29%27%20fill%3D%27%23ec9fc2%27%20stroke%3D%27%23c4558a%27%20stroke-width%3D%27.6%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%274%27%20fill%3D%27%23fbe9a6%27%20stroke%3D%27%23c9a24a%27%20stroke-width%3D%27.8%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%271.4%27%20fill%3D%27%23b0457f%27%2F%3E%3Crect%20width%3D%2740%27%20height%3D%273%27%20fill%3D%27%232c6a45%27%2F%3E%3Crect%20width%3D%273%27%20height%3D%2740%27%20fill%3D%27%232c6a45%27%2F%3E%3Crect%20x%3D%2737%27%20y%3D%2737%27%20width%3D%273%27%20height%3D%273%27%20fill%3D%27%232c6a45%27%2F%3E%3C%2Fg%3E%3C%2Fdefs%3E%3Cuse%20xlink%3Ahref%3D%27%23E%27%20href%3D%27%23E%27%20transform%3D%27translate%2840%200%29%27%2F%3E%3Cuse%20xlink%3Ahref%3D%27%23E%27%20href%3D%27%23E%27%20transform%3D%27translate%2840%20120%29%20scale%281%20-1%29%27%2F%3E%3Cuse%20xlink%3Ahref%3D%27%23E%27%20href%3D%27%23E%27%20transform%3D%27matrix%280%201%201%200%200%2040%29%27%2F%3E%3Cuse%20xlink%3Ahref%3D%27%23E%27%20href%3D%27%23E%27%20transform%3D%27matrix%280%201%20-1%200%20120%2040%29%27%2F%3E%3Cuse%20xlink%3Ahref%3D%27%23C%27%20href%3D%27%23C%27%2F%3E%3Cuse%20xlink%3Ahref%3D%27%23C%27%20href%3D%27%23C%27%20transform%3D%27translate%28120%200%29%20scale%28-1%201%29%27%2F%3E%3Cuse%20xlink%3Ahref%3D%27%23C%27%20href%3D%27%23C%27%20transform%3D%27translate%280%20120%29%20scale%281%20-1%29%27%2F%3E%3Cuse%20xlink%3Ahref%3D%27%23C%27%20href%3D%27%23C%27%20transform%3D%27translate%28120%20120%29%20scale%28-1%20-1%29%27%2F%3E%3C%2Fsvg%3E") 40 / 26px round;background:var(--paper);box-shadow:0 8px 22px #0004}
-.cn{display:none}
-.in{background:var(--paper);border:2px solid #0f3d2c;outline:1.5px solid #c9a24a;outline-offset:-5px;aspect-ratio:1920/3106;width:min(calc(100vw - 100px),calc((100dvh - 205px)*.6182));overflow:hidden}
+.fr{position:relative;border:calc(var(--bw)/2) solid transparent;border-image:var(--fi) 40/calc(var(--bw)/2) round;background:var(--paper);box-shadow:0 8px 22px #0004}
+html[data-frame=plain] .fr{border:10px double var(--gold);border-image:none}
+html[data-frame=none] .fr{border:0;border-image:none;box-shadow:0 2px 12px #0003}
+html[data-frame=plain]{--bw:20px}html[data-frame=none]{--bw:0px}
+.in{position:relative;background:var(--paper);border:2px solid var(--green);outline:1.5px solid var(--gold);outline-offset:-5px;aspect-ratio:1920/3106;width:min(calc(100vw - var(--bw) - 48px),calc((100dvh - 153px - var(--bw))*.6182));overflow:hidden}
+html[data-frame=none] .in{border:0;outline:0}
 .in img{display:block;width:100%;height:100%;mix-blend-mode:multiply;user-select:none;-webkit-user-drag:none}
-:root[data-theme=dark] .in img{filter:invert(1);mix-blend-mode:screen}
+html[data-inv="1"] .in img{filter:invert(1);mix-blend-mode:screen}
+.vl{position:absolute;background:var(--paper);opacity:var(--veil);pointer-events:none}
+.sbtn{font-size:16px;font-weight:700;color:var(--green);background:color-mix(in srgb,var(--gold) 22%,transparent);border:1px solid var(--gold);border-radius:10px;padding:1px 12px}
 #msg{text-align:center;padding:30px 10px;font-size:20px}
-#np{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));background:#173a2bdd;color:#fff;border:1px solid var(--gold);border-radius:20px;padding:4px 14px;font-size:15px;z-index:5;display:none}
-footer button{font:inherit;font-size:17px;color:#fff;background:#ffffff1a;border:1px solid #ffffff44;border-radius:10px;padding:9px 12px}
-footer .play{background:var(--gold);border-color:var(--gold);color:#1b1a17;font-weight:700;min-width:96px}
-.sheet{position:fixed;inset:auto 0 0 0;max-height:72vh;overflow:auto;background:var(--paper);border-top:3px solid var(--gold);border-radius:14px 14px 0 0;padding:0 14px 20px;font-size:20px;line-height:1.9;transform:translateY(105%);transition:transform .25s;z-index:9;box-shadow:0 -6px 20px #0004}
+#np{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(86px + env(safe-area-inset-bottom,0px));background:#173a2bee;color:#fff;border:1px solid var(--gold);border-radius:20px;padding:4px 14px;font-size:15px;z-index:5;display:none}
+.sheet{position:fixed;inset:auto 0 0 0;max-height:78vh;overflow:auto;background:var(--paper);color:var(--ink);border-top:3px solid var(--gold);border-radius:20px 20px 0 0;padding:0 16px 24px;font-size:19px;line-height:1.9;transform:translateY(105%);transition:transform .25s;z-index:9;box-shadow:0 -6px 24px #0005}
 .sheet.open{transform:none}
-.sheet .sh{position:sticky;top:0;background:var(--paper);display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-weight:700;color:var(--green)}
-.sheet .sh button{font:inherit;border:1px solid var(--gold);background:none;color:var(--ink);border-radius:8px;padding:2px 12px}
-.sheet p{margin:8px 0;border-bottom:1px solid var(--soft)}.sheet b{color:#a8832f}
-.sbtn{font:inherit;font-size:16px;font-weight:700;color:var(--green);background:#c9a24a30;border:1px solid #c9a24a;border-radius:8px;padding:0 12px}
-.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding-top:4px}
-.sg button{font:inherit;font-size:17px;background:none;border:1px solid #c9a24a66;border-radius:8px;padding:6px 4px;color:var(--ink)}
-.sg small{color:#a8832f}
-.rb{display:flex;flex-direction:column;width:100%;text-align:right;font:inherit;font-size:18px;background:#c9a24a30;border:1px solid #c9a24a;border-radius:10px;padding:10px 12px;margin:8px 0;color:var(--ink)}
-.rb.cur{background:#c9a24a66;box-shadow:inset 0 0 0 2px #0f3d2c}
-.rb span{font-size:15px;opacity:.8}
+.sheet .sh{position:sticky;top:0;background:var(--paper);display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-weight:700;font-size:20px;color:var(--green)}
 .sheet .sh>div{display:flex;gap:8px;align-items:center}
+.sheet .sh button{border:1px solid var(--gold);background:none;color:var(--ink);border-radius:10px;padding:2px 12px;font-size:16px}
+.sheet p{margin:8px 0;border-bottom:1px solid color-mix(in srgb,var(--ink) 12%,transparent)}.sheet b{color:#a8832f}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding-top:4px}
+.sg button{font-size:17px;background:none;border:1px solid #c9a24a66;border-radius:10px;padding:6px 4px;color:var(--ink)}
+.sg small{color:#a8832f}
+.rb{display:flex;flex-direction:column;width:100%;text-align:right;font-size:18px;background:#c9a24a30;border:1px solid #c9a24a;border-radius:12px;padding:10px 12px;margin:8px 0;color:var(--ink)}
+.rb.cur{background:#c9a24a66;box-shadow:inset 0 0 0 2px var(--green)}
+.rb span{font-size:15px;opacity:.8}
+.st h4{margin:14px 0 6px;color:var(--green);font-size:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:16px;border:1.5px solid #c9a24a88;background:none;border-radius:12px;padding:6px 12px;color:var(--ink);display:flex;align-items:center;gap:8px}
+.chip.on{border-color:var(--green);box-shadow:inset 0 0 0 1.5px var(--green);background:#c9a24a30;font-weight:700}
+.sw{width:34px;height:20px;border-radius:5px;border:1px solid #0004}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:17px;padding:4px 0}
+.row input[type=range]{flex:1;accent-color:var(--green)}
+.tg{width:50px;height:28px;border-radius:14px;border:0;background:#8885;position:relative}
+.tg::after{content:'';position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
+.tg.on{background:var(--green)}.tg.on::after{right:25px}
 button:focus-visible,select:focus-visible{outline:3px solid #ffd76a}
 </style>
 </head>
 <body>
 <header id="hd">
-  <div class="title" id="title">…</div>
-  <select id="juz" aria-label="الجزء"></select>
-  <select id="rub" aria-label="الربع"></select>
-  <select id="rec" aria-label="القارئ">
-    <option value="Alafasy_128kbps">العفاسي</option>
-    <option value="Husary_128kbps">الحصري</option>
-    <option value="Abdul_Basit_Murattal_192kbps">عبد الباسط</option>
-    <option value="Minshawy_Murattal_128kbps">المنشاوي</option>
-    <option value="Abdurrahmaan_As-Sudais_192kbps">السديس</option>
-    <option value="Saood_ash-Shuraym_128kbps">الشريم</option>
-    <option value="Hudhaify_128kbps">الحذيفي</option>
-    <option value="Maher_AlMuaqily_64kbps">ماهر المعيقلي</option>
-  </select>
-  <button id="theme" aria-label="الوضع الليلي">◐</button>
+  <div class="top"><div class="brand"><b>۞</b>مصحف التراويح</div><div class="tb"><button id="theme" aria-label="الوضع الليلي">◐</button><button id="gear" aria-label="الإعدادات">⚙</button></div></div>
+  <div class="sel"><select id="juz" aria-label="الجزء"></select><select id="rub" aria-label="الربع"></select><select id="rec" aria-label="القارئ">
+    <option value="Alafasy_128kbps">العفاسي</option><option value="Husary_128kbps">الحصري</option><option value="Abdul_Basit_Murattal_192kbps">عبد الباسط</option><option value="Minshawy_Murattal_128kbps">المنشاوي</option><option value="Abdurrahmaan_As-Sudais_192kbps">السديس</option><option value="Saood_ash-Shuraym_128kbps">الشريم</option><option value="Hudhaify_128kbps">الحذيفي</option><option value="Maher_AlMuaqily_64kbps">ماهر المعيقلي</option></select></div>
+  <div class="sub" id="title">…</div>
 </header>
 <div id="mushaf"></div>
 <div id="np"></div>
 <footer id="ft">
-  <button id="prev">→ السابق</button>
-  <button class="play" id="play">▶ استماع</button>
-  <button id="tf">التفسير</button>
-  <button id="next">التالي ←</button>
+  <button id="prev"><i>→</i>السابق</button>
+  <button class="play" id="play"><i>▶</i>استماع</button>
+  <button id="tf"><i>☰</i>التفسير</button>
+  <button id="next"><i>←</i>التالي</button>
 </footer>
 <div id="sheet" class="sheet"><div class="sh"><span>التفسير الميسر للربع</span><button id="tc">إغلاق</button></div><div id="tbody"></div></div>
 <div id="ssheet" class="sheet"><div class="sh"><div><button id="sback" style="display:none">→ السور</button><span id="stitle">اختر السورة</span></div><button id="sc">إغلاق</button></div><div id="sbody"></div></div>
+<div id="set" class="sheet st"><div class="sh"><span>الإعدادات</span><button id="setc">إغلاق</button></div><div id="setb"></div></div>
 <audio id="aud" preload="auto"></audio>
 <script>
 const $=id=>document.getElementById(id), API='https://api.alquran.cloud/v1/hizbQuarter/';
@@ -87,15 +99,51 @@ const ar=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]), p3=n=>String(
 const RUB_NAMES=['الربع الأول','الربع الثاني','الربع الثالث','الربع الرابع','الربع الخامس','الربع السادس','الربع السابع','الربع الثامن'];
 const SN="الفاتحة،البقرة،آل عمران،النساء،المائدة،الأنعام،الأعراف،الأنفال،التوبة،يونس،هود،يوسف،الرعد،إبراهيم،الحجر،النحل،الإسراء،الكهف،مريم،طه،الأنبياء،الحج،المؤمنون،النور،الفرقان،الشعراء،النمل،القصص،العنكبوت،الروم،لقمان،السجدة،الأحزاب،سبأ،فاطر،يس،الصافات،ص،الزمر،غافر،فصلت،الشورى،الزخرف،الدخان،الجاثية،الأحقاف،محمد،الفتح،الحجرات،ق،الذاريات،الطور،النجم،القمر،الرحمن،الواقعة،الحديد،المجادلة،الحشر،الممتحنة،الصف،الجمعة،المنافقون،التغابن،الطلاق،التحريم،الملك،القلم،الحاقة،المعارج،نوح،الجن،المزمل،المدثر،القيامة،الإنسان،المرسلات،النبأ،النازعات،عبس،التكوير،الانفطار،المطففين،الانشقاق،البروج،الطارق،الأعلى،الغاشية،الفجر،البلد،الشمس،الليل،الضحى،الشرح،التين،العلق،القدر،البينة،الزلزلة،العاديات،القارعة،التكاثر،العصر،الهمزة،الفيل،قريش،الماعون،الكوثر،الكافرون،النصر،المسد،الإخلاص،الفلق،الناس".split('،');
 const JUZ=['الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر','السابع عشر','الثامن عشر','التاسع عشر','العشرون','الحادي والعشرون','الثاني والعشرون','الثالث والعشرون','الرابع والعشرون','الخامس والعشرون','السادس والعشرون','السابع والعشرون','الثامن والعشرون','التاسع والعشرون','الثلاثون'];
+
+// ---------- الإعدادات: المظهر والإطارات ----------
+const TH={light:{n:'فاتح',soft:'#e9e1cc',paper:'#fbf6e6',bar:'#173a2b',ink:'#1b1a17',green:'#1f4d3a',gold:'#c9a24a',inv:0},
+ paper:{n:'ورقي',soft:'#d8c7a0',paper:'#f4e8cb',bar:'#4a3520',ink:'#2a1d0e',green:'#5a3d1e',gold:'#b8862f',inv:0},
+ white:{n:'أبيض',soft:'#eceff2',paper:'#ffffff',bar:'#1d3b4f',ink:'#111111',green:'#1d3b4f',gold:'#c9a24a',inv:0},
+ night:{n:'ليلي',soft:'#0b0e0f',paper:'#161a1c',bar:'#0b1112',ink:'#e9e4d4',green:'#8fcfae',gold:'#c9a24a',inv:1}};
+const PAL={green:{n:'أخضر وردي',bg:'#b3d9aa',vine:'#5aa55f',pt:'#ec9fc2',ps:'#c4558a',ln:'#2c6a45',lf:'#5aa55f',md:'#7fbf86',ct:'#fbe9a6',cs:'#c9a24a',cd:'#b0457f'},
+ gold:{n:'ذهبي',bg:'#f0dca0',vine:'#b8902f',pt:'#fff4d2',ps:'#a67c1f',ln:'#6b4b0f',lf:'#c9a24a',md:'#e4c46b',ct:'#7a4b12',cs:'#6b4b0f',cd:'#fff2c9'},
+ blue:{n:'أزرق',bg:'#bcd9e8',vine:'#3f86a8',pt:'#f6d98b',ps:'#b58a2a',ln:'#1d4d6b',lf:'#3f86a8',md:'#86bcd6',ct:'#fff4cf',cs:'#b58a2a',cd:'#1d4d6b'},
+ wine:{n:'عنابي',bg:'#ebc9ce',vine:'#a8505f',pt:'#fbe9a6',ps:'#c9a24a',ln:'#6d1f33',lf:'#9c4a58',md:'#cf98a2',ct:'#6d1f33',cs:'#c9a24a',cd:'#fbe9a6'}};
+function frameSVG(c){
+  const pet=(n,rx,ry,cy)=>[...Array(n)].map((_,k)=>`<ellipse cx='20' cy='${cy}' rx='${rx}' ry='${ry}' transform='rotate(${k*360/n} 20 20)' fill='${c.pt}' stroke='${c.ps}' stroke-width='.6'/>`).join('');
+  const E=`<g id='E'><rect width='40' height='40' fill='${c.bg}'/><path d='M0 8L20 20L0 32M40 8L20 20L40 32' fill='none' stroke='#fff' stroke-opacity='.55' stroke-width='.9'/><path d='M0 12Q10 6 20 12T40 12M0 28Q10 34 20 28T40 28' fill='none' stroke='${c.vine}' stroke-width='.9'/><ellipse cx='7' cy='20' rx='6.2' ry='2.7' transform='rotate(-28 7 20)' fill='${c.lf}' stroke='${c.ln}' stroke-width='.5'/><ellipse cx='33' cy='20' rx='6.2' ry='2.7' transform='rotate(28 33 20)' fill='${c.lf}' stroke='${c.ln}' stroke-width='.5'/>${pet(5,3.5,6,13.8)}<circle cx='20' cy='20' r='3' fill='${c.ct}' stroke='${c.cs}' stroke-width='.6'/><circle cx='13' cy='11' r='1.1' fill='#fff'/><circle cx='27' cy='11' r='1.1' fill='#fff'/><circle cx='13' cy='29' r='1.1' fill='#fff'/><circle cx='27' cy='29' r='1.1' fill='#fff'/><rect width='40' height='3' fill='${c.ln}'/><rect y='4.2' width='40' height='.9' fill='#fff'/><rect y='37' width='40' height='3' fill='${c.ln}'/><rect y='34.9' width='40' height='.9' fill='#fff'/></g>`;
+  const C=`<g id='C'><rect width='40' height='40' fill='${c.bg}'/><circle cx='20' cy='20' r='16' fill='${c.md}' stroke='${c.ln}' stroke-width='.9'/><circle cx='20' cy='20' r='13' fill='none' stroke='#fff' stroke-opacity='.7' stroke-width='.8' stroke-dasharray='1.6 1.6'/>${pet(8,3.3,6.4,13)}<circle cx='20' cy='20' r='4' fill='${c.ct}' stroke='${c.cs}' stroke-width='.8'/><circle cx='20' cy='20' r='1.4' fill='${c.cd}'/><rect width='40' height='3' fill='${c.ln}'/><rect width='3' height='40' fill='${c.ln}'/><rect x='37' y='37' width='3' height='3' fill='${c.ln}'/></g>`;
+  const u=(id,t)=>`<use xlink:href='#${id}' href='#${id}'${t?` transform='${t}'`:''}/>`;
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='120' height='120' viewBox='0 0 120 120'><defs>${E}${C}</defs>${u('E','translate(40 0)')}${u('E','translate(40 120) scale(1 -1)')}${u('E','matrix(0 1 1 0 0 40)')}${u('E','matrix(0 1 -1 0 120 40)')}${u('C')}${u('C','translate(120 0) scale(-1 1)')}${u('C','translate(0 120) scale(1 -1)')}${u('C','translate(120 120) scale(-1 -1)')}</svg>`;
+  return 'data:image/svg+xml,'+encodeURIComponent(svg);
+}
 const S=JSON.parse(localStorage.getItem('rub3')||'{}');
+const ST={theme:S.theme||(S.dark?'night':'light'),frame:S.frame||'green',shade:S.shade!==false,veil:S.veil||.78};
 let rub=+new URLSearchParams(location.search).get('r')||S.rub||1, ayahs=[], cur=-1, playing=false, first=true;
-if(S.dark)document.documentElement.dataset.theme='dark';
 $('rec').value=S.rec||'Alafasy_128kbps';
-const save=()=>localStorage.setItem('rub3',JSON.stringify({rub,rec:$('rec').value,dark:document.documentElement.dataset.theme==='dark'}));
+const save=()=>localStorage.setItem('rub3',JSON.stringify({rub,rec:$('rec').value,...ST}));
+function applyTheme(){const t=TH[ST.theme]||TH.light,r=document.documentElement;
+  for(const k of ['soft','paper','bar','ink','green','gold'])r.style.setProperty('--'+k,t[k]);
+  r.dataset.inv=t.inv;r.style.setProperty('--veil',ST.veil);}
+function applyFrame(){const r=document.documentElement;r.dataset.frame=ST.frame;
+  if(PAL[ST.frame])r.style.setProperty('--fi','url("'+frameSVG(PAL[ST.frame])+'")');}
+applyTheme();applyFrame();
 for(let j=1;j<=30;j++)$('juz').add(new Option('الجزء '+ar(j),j));
 for(let k=0;k<8;k++)$('rub').add(new Option(RUB_NAMES[k],k));
 function sync(){$('juz').value=Math.ceil(rub/8);$('rub').value=(rub-1)%8;
   $('title').textContent='الحزب '+ar(Math.ceil(rub/4))+' · ربع '+ar(rub)+' / ٢٤٠';}
+// ---------- بيانات مواضع نهايات الآيات على صور الصفحات ----------
+let MK=null,CUM=[0];
+async function loadMarkers(){try{const r=await fetch('markers.json');MK=await r.json();let c=0;for(let p=1;p<=604;p++){CUM[p]=c;c+=(MK[p]||[]).length;}}catch(e){console.warn('markers',e);MK=null;}}
+const vr=(x,y,w,h)=>'<i class="vl" style="left:'+x/10+'%;top:'+y/10+'%;width:'+w/10+'%;height:'+h/10+'%"></i>';
+function veils(p,f,l){
+  if(!ST.shade||!MK||!MK[p])return'';
+  const m=MK[p],b=CUM[p];let h='';
+  const a=f-1-b; if(a>=1&&a<=m.length){const [x0,x1,t,bt]=m[a-1];h+=vr(0,0,1000,t)+vr(x0,t,1000-x0,bt-t);}
+  const z=l-b;   if(z>=1&&z<=m.length){const [x0,x1,t,bt]=m[z-1];h+=vr(0,t,x0,bt-t)+vr(0,bt,1000,1000-bt);}
+  return h;
+}
+
 const msg=t=>'<div class="mp"><div id="msg">'+t+'</div></div>';
 async function getEd(n,ed){
   const r=await fetch(API+n+'/'+ed);
@@ -108,14 +156,16 @@ function prep(q){
   const keys=Object.keys(q.surahs||{}).map(Number).sort((x,y)=>x-y);let si=0;
   q.ayahs.forEach((x,i)=>{if(i>0&&x.numberInSurah===1)si++;x.sn=(x.surah&&x.surah.number)||keys[si]||1;});
 }
+let LASTQ=null;
 async function go(n){
   rub=Math.min(240,Math.max(1,n));stopAudio();sync();save();
   $('mushaf').innerHTML=msg('جارٍ التحميل…');$('tbody').innerHTML='';
   const my=rub;
   try{
+    if(MK===null)await loadMarkers();
     const q=await getEd(my,'quran-uthmani');
     if(my!==rub)return;
-    prep(q);ayahs=q.ayahs;
+    prep(q);ayahs=q.ayahs;LASTQ=q;
     let t=null;try{t=await getEd(my,'ar.muyassar');}catch(e){console.warn('tafsir',e);}
     if(my!==rub)return;
     tafsir(t);pages(q);
@@ -140,13 +190,12 @@ function pages(q){
   $('mushaf').innerHTML=ps.map(p=>{
     const x=a.find(y=>y.page===p);
     return '<div class="mp" data-p="'+p+'"><div class="pg"><div class="mph"><span>الجزء '+(JUZ[x.juz-1]||'')+'</span><button class="sbtn" onclick="event.stopPropagation();openSurahList()">سورة '+SN[x.sn-1]+' ▾</button></div>'+
-    '<div class="fr"><div class="in"><img data-p="'+p+'" data-i="'+GOOD+'" src="'+cand(p)[GOOD]+'" alt="صفحة '+p+'" decoding="async" onload="okI(this)" onerror="nx(this)"></div></div>'+
+    '<div class="fr"><div class="in"><img data-p="'+p+'" data-i="'+GOOD+'" src="'+cand(p)[GOOD]+'" alt="صفحة '+p+'" decoding="async" onload="okI(this)" onerror="nx(this)">'+veils(p,f.number,l.number)+'</div></div>'+
     '<div class="mpn">'+ar(p)+'<span class="rg">'+rg+'</span></div></div></div>';
   }).join('');
 }
-addEventListener('resize',()=>{});
 $('mushaf').addEventListener('click',()=>document.body.classList.toggle('hide'));
-$('theme').onclick=()=>{const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'':'dark';save();};
+$('theme').onclick=()=>{ST.theme=TH[ST.theme].inv?'light':'night';applyTheme();save();};
 $('juz').onchange=()=>go(($('juz').value-1)*8+1+ +$('rub').value);
 $('rub').onchange=$('juz').onchange;
 $('next').onclick=()=>go(rub+1);$('prev').onclick=()=>go(rub-1);
@@ -172,14 +221,31 @@ async function openSurah(n){
 }
 function pickRub(q){closeS();go(q);}
 $('sc').onclick=closeS;$('sback').onclick=openSurahList;
+// شاشة الإعدادات
+function swatch(c){return '<span class="sw" style="background:linear-gradient(90deg,'+c.ln+' 0 22%,'+c.bg+' 22% 78%,'+c.pt+' 78% 100%)"></span>';}
+function buildSettings(){
+  const th=Object.entries(TH).map(([k,v])=>'<button class="chip'+(ST.theme===k?' on':'')+'" data-th="'+k+'"><span class="sw" style="background:linear-gradient(90deg,'+v.paper+' 0 50%,'+v.bar+' 50%)"></span>'+v.n+'</button>').join('');
+  const fr=Object.entries(PAL).map(([k,v])=>'<button class="chip'+(ST.frame===k?' on':'')+'" data-fr="'+k+'">'+swatch(v)+v.n+'</button>').join('')+
+    '<button class="chip'+(ST.frame==='plain'?' on':'')+'" data-fr="plain">خط مزدوج</button><button class="chip'+(ST.frame==='none'?' on':'')+'" data-fr="none">بدون إطار</button>';
+  $('setb').innerHTML='<h4>المظهر</h4><div class="chips">'+th+'</div><h4>الإطار</h4><div class="chips">'+fr+'</div>'+
+   '<h4>تظليل ما خارج الربع</h4><div class="row"><span>إخفاء الآيات اللي مش في الربع</span><button class="tg'+(ST.shade?' on':'')+'" id="tgs" aria-label="تظليل"></button></div>'+
+   '<div class="row"><span>القوة</span><input type="range" id="vs" min="45" max="95" value="'+Math.round(ST.veil*100)+'"></div>';
+  document.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>{ST.theme=b.dataset.th;applyTheme();save();buildSettings();});
+  document.querySelectorAll('[data-fr]').forEach(b=>b.onclick=()=>{ST.frame=b.dataset.fr;applyFrame();save();buildSettings();});
+  $('tgs').onclick=()=>{ST.shade=!ST.shade;save();buildSettings();if(LASTQ)pages(LASTQ);};
+  $('vs').oninput=e=>{ST.veil=e.target.value/100;document.documentElement.style.setProperty('--veil',ST.veil);};
+  $('vs').onchange=save;
+}
+$('gear').onclick=()=>{buildSettings();$('set').classList.add('open');};
+$('setc').onclick=()=>$('set').classList.remove('open');
 // audio
 const aud=$('aud');
 function mark(i){const x=ayahs[i];$('np').style.display='block';$('np').textContent='▶ سورة '+SN[x.sn-1]+' · آية '+ar(x.numberInSurah);
   const el=document.querySelector('.mp[data-p="'+x.page+'"]');if(el)el.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});}
 function playAt(i){if(i>=ayahs.length){stopAudio();if(rub<240)go(rub+1).then(()=>playAt(0));return;}
   cur=i;playing=true;const x=ayahs[i];aud.src='https://everyayah.com/data/'+$('rec').value+'/'+p3(x.sn)+p3(x.numberInSurah)+'.mp3';
-  aud.play().catch(()=>stopAudio());mark(i);$('play').textContent='⏸ إيقاف';}
-function stopAudio(){playing=false;aud.pause();cur=-1;$('np').style.display='none';$('play').textContent='▶ استماع';}
+  aud.play().catch(()=>stopAudio());mark(i);$('play').innerHTML='<i>⏸</i>إيقاف';}
+function stopAudio(){playing=false;aud.pause();cur=-1;$('np').style.display='none';$('play').innerHTML='<i>▶</i>استماع';}
 aud.onended=()=>playAt(cur+1);
 $('play').onclick=()=>{if(playing)stopAudio();else playAt(0);};
 async function wake(){try{await navigator.wakeLock.request('screen');}catch(e){}}
